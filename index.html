@@ -35,16 +35,9 @@ div.dualcontainer div {
 
 <body>
 
-  <ul>
-    <li><img src="https://deltarune.wiki/images/Electro-Dasher_overworld_miniature.gif?cb=npvaxf&h=thumb.php&f=Electro-Dasher_overworld_miniature.gif" height="30"></li>
-    <li><a href="/Mini-Internet/">Homepage</a></li>
-    <li><a href="/Mini-Internet/Grade_Calculator_final.html">GPA Calculator for Diddybluds</a></li>
-    <li><a href="/Mini-Internet/GameDash.html">Game Dashboard</a></li>
-    <li><a href="/Mini-Internet/Quotes.html">Quotes</a></li>
-    <li><a href="/Textbook_arch.html">The Archive</a></li>
-    <li><a href="https://padlet.com/liuy18_3/ultimate-dashboard-updates-edi6008puh0cvift">Notices here, click for more details</a></li>
-    <li><a href="/Textbook_arch.html">Coming Soon...</a></li>
-  </ul>
+
+	<div id="navbar"></div>
+	
     <h1>Surprise!</h1>
     <h1 style="font-family: Arial, sans-serif; font-size: 24px; color: blue;">Welcome to THE ULTIMATE DASHBOARD</h1>
 	
@@ -85,6 +78,21 @@ div.dualcontainer div {
     <p>Videos of the Week</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/lZc33WQFeJM?si=fz4Av2YNxdefJAQC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+<script>
+// Load navbar.html into the #navbar div
+fetch('navbar.html')
+  .then(response => {
+    if (!response.ok) throw new Error("Navbar file not found");
+    return response.text();
+  })
+  .then(data => {
+    document.getElementById('navbar').innerHTML = data;
+  })
+  .catch(error => {
+    console.error("Error loading navbar:", error);
+  });
+</script>	
 
 </body>
+
 </html>
