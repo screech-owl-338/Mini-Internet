@@ -28,7 +28,6 @@ body {
   padding: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   text-align: center;
-  animation: NavbarfadeOut 0.6s;
 }
 
 ul {
@@ -82,16 +81,7 @@ ul li a.active {
 .navbar a:hover {
   color: #004080;
   border-bottom: 2px solid #004080;
-  animation: NavbarfadeIn 0.6s;
 }
-/* Fade-in and Fade-out animation for Navbar highlight on hover */
-@keyframes NavbarfadeIn{
-    0% { background-color: cadetblue; }
-    100% { background-color: darkcyan; }
-}
-@keyframes NavbarfadeOut{
-    0% { background-color: darkcyan; }
-    100% { background-color: cadetblue; }
 
 /* Headings */
 h1 {
