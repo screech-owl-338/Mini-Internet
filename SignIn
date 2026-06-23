@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign In</title>
+</head>
+<body>
+  <h2>Sign In</h2>
+
+  <p>Don't have an account?  
+     <a href="https://forms.gle/9J37pW1XR6EoVn6G9" target="_blank">Sign up here</a>
+  </p>
+
+  <form id="loginForm">
+    <input type="text" id="identifier" placeholder="Username, Email, or Lionel ID#" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Sign In</button>
+  </form>
+
+  <div id="message"></div>
+  <button id="logoutBtn" style="display:none;">Log Out</button>
+
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFlZ6URVgf771hEcUmF-8HhSqdiD3XKRXXvThaihvM4lYaqVgDT1ByYfHetv_-PsjAKnq3j5fmVDnO/pubhtml";
+
+    // Cookie helpers
+    function setCookie(name, value, days) {
+      const d = new Date();
+      d.setTime(d.getTime() + (days*24*60*60*1000));
+      const expires = "expires="+ d.toUTCString();
+      document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+    }
+    function getCookie(name) {
+      const cname = name + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const ca = decodedCookie.split(';');
+      for(let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(cname) === 0) {
+          return c.substring(cname.length, c.length);
+        }
+      }
+      return "";
+    }
+    function eraseCookie(name) {
+      document.cookie = name + "=; Max-Age=-99999999; path=/";
+    }
+
+    // Auto-login if cookie exists
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedUser = getCookie("username");
+      if (savedUser) {
+        document.getElementById("message").innerText = `Welcome back, ${savedUser}`;
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "inline";
+      }
+    });
+
+    async function fetchUsers() {
+      const res = await fetch(SHEET_URL);
+      const text = await res.text();
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, "text/html");
+      const rows = Array.from(doc.querySelectorAll("table tbody tr"))
+        .map(tr => Array.from(tr.querySelectorAll("td")).map(td => td.innerText.trim()));
+      return rows;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById("identifier").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const rows = await fetchUsers();
+
+      // Columns:
+      // B = Lionel ID# (index 0)
+      // C = Email (index 1)
+      // D = Username (index 2)
+      // F = Password (index 5)
+
+      const match = rows.find(row =>
+        (row[0] === id || row[1] === id || row[2] === id) &&
+        row[5] === password
+      );
+
+      if (match) {
+        const username = match[2];
+        setCookie("username", username, 7);
+
+        document.getElementById("message").innerText = `Welcome, ${username}`;
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "inline";
+
+        // Redirect to shop page
+        window.location.href = "https://screech-owl-338.github.io/Mini-Internet/";
+      } else {
+        document.getElementById("message").innerText = "Invalid login.";
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      eraseCookie("username");
+      location.reload();
+    });
+  </script>
+</body>
+</html>
