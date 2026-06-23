@@ -20,6 +20,7 @@
   <button id="logoutBtn" style="display:none;">Log Out</button>
 
   <script>
+    // Published as CSV, not HTML
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFlZ6URVgf771hEcUmF-8HhSqdiD3XKRXXvThaihvM4lYaqVgDT1ByYfHetv_-PsjAKnq3j5fmVDnO/pub?output=csv";
 
     // Cookie helpers
@@ -55,15 +56,11 @@
       }
     });
 
+    // Fetch and parse CSV
     async function fetchUsers() {
       const res = await fetch(SHEET_URL);
       const text = await res.text();
-
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, "text/html");
-      const rows = Array.from(doc.querySelectorAll("table tbody tr"))
-        .map(tr => Array.from(tr.querySelectorAll("td")).map(td => td.innerText.trim()));
-      return rows;
+      return text.split("\n").map(row => row.split(","));
     }
 
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -75,13 +72,13 @@
       const rows = await fetchUsers();
 
       // Columns:
-      // B = Lionel ID# (index 0)
-      // C = Email (index 1)
-      // D = Username (index 2)
+      // C = Username (index 2)
+      // D = Lionel ID (index 3)
+      // E = Email (index 4)
       // F = Password (index 5)
 
       const match = rows.find(row =>
-        (row[0] === id || row[1] === id || row[2] === id) &&
+        (row[2] === id || row[3] === id || row[4] === id) &&
         row[5] === password
       );
 
