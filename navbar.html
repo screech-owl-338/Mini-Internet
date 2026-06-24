@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<ul>
+<ul style="display:flex;align-items:center;gap:15px;list-style:none;">
     <li><img src="https://deltarune.wiki/images/Electro-Dasher_overworld_miniature.gif?cb=npvaxf&h=thumb.php&f=Electro-Dasher_overworld_miniature.gif" height="30"></li>
     <li><a href="/Mini-Internet/">Homepage</a></li>
     <li><a href="/Mini-Internet/Grade_Calculator_final.html">GPA Calculator</a></li>
@@ -8,6 +8,51 @@
     <li><a href="/Mini-Internet/Textbook_arch.html">The Archive</a></li>
     <li><a href="https://padlet.com/liuy18_3/ultimate-dashboard-updates-edi6008puh0cvift">DELTARUNE TOMORROW</a></li>
     <li><a href="/Mini-Internet/Textbook_arch.html">Coming Soon...</a></li>
-    <li><a href="/Mini-Internet/SignIn.html">Sign In</a></li>
-  </ul>
+
+    <!-- Profile picture -->
+
+
+    <!-- Username -->
+    <li>
+        <a href="/Mini-Internet/SignIn.html"><span id="navUsername" 
+              style="font-weight:bold;display:none;"><img id="navPfp" 
+             src="" 
+             alt="Profile" 
+             style="width:40px;height:40px;border-radius:50%;display:none;"></span></a>
+    </li>
+</ul>
+<script>
+function getCookie(name) {
+  const cname = name + "=";
+  const decoded = decodeURIComponent(document.cookie);
+  const parts = decoded.split(";");
+  for (let p of parts) {
+    p = p.trim();
+    if (p.indexOf(cname) === 0) {
+      return p.substring(cname.length);
+    }
+  }
+  return "";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const pfp = getCookie("pfp");
+  const username = getCookie("username");
+
+  // Show profile picture
+  if (pfp) {
+    const img = document.getElementById("navPfp");
+    img.src = pfp;
+    img.style.display = "inline-block";
+  }
+
+  // Show username
+  if (username) {
+    const nameEl = document.getElementById("navUsername");
+    nameEl.textContent = username;
+    nameEl.style.display = "inline-block";
+  }
+});
+</script>
+
 </html>
