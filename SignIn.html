@@ -20,8 +20,20 @@
   <button id="logoutBtn" style="display:none;">Log Out</button>
 
   <script>
-    // Published as CSV, not HTML
+    // CSV version of your sheet
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFlZ6URVgf771hEcUmF-8HhSqdiD3XKRXXvThaihvM4lYaqVgDT1ByYfHetv_-PsjAKnq3j5fmVDnO/pub?output=csv";
+
+    // Convert ANY Google Drive link into a direct image link
+    function convertDriveLink(url) {
+      if (!url) return "";
+      if (url.includes("uc?export=view")) return url;
+
+      const match = url.match(/[-\w]{25,}/);
+      if (!match) return url;
+
+      const id = match[0];
+      return `https://drive.google.com/uc?export=view&id=${id}`;
+    }
 
     // Cookie helpers
     function setCookie(name, value, days) {
@@ -32,12 +44,12 @@
     }
     function getCookie(name) {
       const cname = name + "=";
-      const decodedCookie = decodeURIComponent(document.cookie);
-      const ca = decodedCookie.split(';');
-      for(let i = 0; i < ca.length; i++) {
-        let c = ca[i].trim();
-        if (c.indexOf(cname) === 0) {
-          return c.substring(cname.length, c.length);
+      const decoded = decodeURIComponent(document.cookie);
+      const parts = decoded.split(";");
+      for (let p of parts) {
+        p = p.trim();
+        if (p.indexOf(cname) === 0) {
+          return p.substring(cname.length);
         }
       }
       return "";
@@ -76,6 +88,7 @@
       // D = Lionel ID (index 3)
       // E = Email (index 4)
       // F = Password (index 5)
+      // G = Profile Picture (index 6)
 
       const match = rows.find(row =>
         (row[2] === id || row[3] === id || row[4] === id) &&
@@ -84,17 +97,20 @@
 
       if (match) {
         const username = match[2];
-        const pfp = match[6]; // Column G
-        
-        setCookie("pfp", pfp, 7);
+        let pfp = match[6];
 
+        // Convert Google Drive link automatically
+        pfp = convertDriveLink(pfp);
+
+        // Save cookies
         setCookie("username", username, 7);
+        setCookie("pfp", pfp, 7);
 
         document.getElementById("message").innerText = `Welcome, ${username}`;
         document.getElementById("loginForm").style.display = "none";
         document.getElementById("logoutBtn").style.display = "inline";
 
-        // Redirect to shop page
+        // Redirect to homepage
         window.location.href = "https://screech-owl-338.github.io/Mini-Internet/";
       } else {
         document.getElementById("message").innerText = "Invalid login.";
@@ -103,6 +119,7 @@
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       eraseCookie("username");
+      eraseCookie("pfp");
       location.reload();
     });
   </script>
