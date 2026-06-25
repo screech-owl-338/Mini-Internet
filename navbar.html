@@ -8,18 +8,14 @@
     <li><a href="/Mini-Internet/Textbook_arch.html">The Archive</a></li>
     <li><a href="https://padlet.com/liuy18_3/ultimate-dashboard-updates-edi6008puh0cvift">DELTARUNE TOMORROW</a></li>
     <li><a href="/Mini-Internet/Textbook_arch.html">Coming Soon...</a></li>
-    <li><a href="/Mini-Internet/SignIn.html">Account</a></li>
 
-    <!-- Profile picture -->
-    <li>
+    <!-- Username + PFP (replaces Account) -->
+    <li style="display:flex;align-items:center;gap:8px;">
         <img id="navPfp" 
              src="" 
              alt="Profile" 
              style="width:40px;height:40px;border-radius:50%;display:none;">
-    </li>
 
-    <!-- Username -->
-    <li>
         <span id="navUsername" 
               style="font-weight:bold;display:none;"></span>
     </li>
@@ -44,14 +40,14 @@ window.addEventListener("DOMContentLoaded", () => {
   const username = getCookie("username");
 
   // Show profile picture
-  if (pfp) {
+  if (pfp && pfp !== "undefined" && pfp !== "") {
     const img = document.getElementById("navPfp");
     img.src = pfp;
     img.style.display = "inline-block";
   }
 
   // Show username
-  if (username) {
+  if (username && username !== "undefined" && username !== "") {
     const nameEl = document.getElementById("navUsername");
     nameEl.textContent = username;
     nameEl.style.display = "inline-block";
